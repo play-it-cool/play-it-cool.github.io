@@ -6,7 +6,7 @@
   const safeUrl=v=>typeof v==='string'&&/^https:\/\/(book|search)\.douban\.com\//.test(v)?v:'';
   const ids=['home','works','writing','about','contact'];
   const titles=['INTRODUCTION / 个人档案','PUBLICATIONS / 出版作品','WRITING / 文字','PROFILE / 关于','CONTACT / 联系'];
-  let active='home',filter='全部',lastFocus=null;
+  let active='home',filter='全部作品',lastFocus=null;
   if(!data)return;
   document.title=`${data.site.title}｜Personal Archive`;
   $('site-intro').textContent=data.site.intro;
@@ -16,6 +16,9 @@
   $('about-headline').textContent=data.about.headline;
   $('about-lead').textContent=data.about.lead;
   $('about-description').textContent=data.about.description;
+  const languageLabels={fr:'法语原作',en:'英语原作',pending:'原作待核实'};
+  const categoryToLanguage={'全部作品':null,'法语原作':'fr','英语原作':'en','待核实':'pending'};
+  $('proof-ribbon').innerHTML=data.proof.map(x=>`<div class="proof-stat"><div class="proof-value">${esc(x.value)}<span>${esc(x.unit)}</span></div><strong>${esc(x.label)}</strong><p>${esc(x.detail)}</p></div>`).join('');
   function goto(id,{focus=false,updateHash=true}={}){
     if(!ids.includes(id))id='home';
     const old=$('page-'+active),fresh=$('page-'+id);
@@ -48,12 +51,12 @@
     return `<span class="unverified">豆瓣链接待核对</span>`;
   }
   function renderProjects(){
-    const chosen=data.projects.filter(p=>filter==='全部'||p.category===filter);
+    const chosen=data.projects.filter(p=>!categoryToLanguage[filter]||p.language===categoryToLanguage[filter]);
     $('projects-grid').innerHTML=chosen.map((p,i)=>`<article class="project-card">
       <button class="card-cover" type="button" data-project="${esc(p.id)}" aria-label="展开《${esc(p.title)}》项目档案"><img alt="《${esc(p.title)}》图书封面" loading="eager" src="${esc(p.cover)}"></button>
-      <div class="card-index"><span>${esc(p.category)}</span><span>${esc(p.year)}</span></div>
+      <div class="card-index"><span>${esc(languageLabels[p.language]||p.category)}</span><span>${esc(p.year)}</span></div>
       <h3>${esc(p.title)}</h3><p class="project-subtitle">${esc(p.subtitle||' ')}</p><p class="project-summary">${esc(p.summary)}</p>
-      <div class="achievement"><strong>成绩 /</strong><em>${esc(p.result||'待补充（销量、榜单、获奖等）')}</em></div>
+      ${p.result?`<div class="achievement"><strong>成绩 /</strong><em>${esc(p.result)}</em></div>`:`<div class="achievement achievement-pending"><strong>档案 /</strong><em>个人分工待补录</em></div>`}
       <div class="card-actions"><button type="button" data-project="${esc(p.id)}">查看项目档案 →</button>${link(p)}</div>
     </article>`).join('');
     $('project-count').textContent=`${chosen.length} / ${data.projects.length} PUBLICATIONS · END OF FILE`;
@@ -66,16 +69,16 @@
   $('dialog-close').addEventListener('click',closeDialog);
   $('detail-dialog').addEventListener('click',e=>{if(e.target===$('detail-dialog'))closeDialog()});
   $('detail-dialog').addEventListener('close',()=>{document.body.style.overflow='';if(lastFocus?.focus)lastFocus.focus()});
-  function field(value,placeholder){return value?`<p>${esc(value)}</p>`:`<p class="detail-placeholder">${esc(placeholder)}</p>`;}
+  function fieldBlock(number,label,value){return value?`<div class="detail-block"><h3>${number} / ${label}</h3><p>${esc(value)}</p></div>`:'';}
   function openProject(p){
     $('detail-content').innerHTML=`<div class="detail-grid"><div><img class="detail-cover" src="${esc(p.cover)}" alt="《${esc(p.title)}》封面"></div><div>
-       <p class="eyebrow">PROJECT / ${esc(p.category)} · ${esc(p.year)}</p><h2 class="detail-title" id="detail-title">${esc(p.title)}</h2><div class="detail-sub">${esc(p.subtitle)}</div><p class="detail-summary">${esc(p.summary)}</p>
-       <div class="detail-block"><h3>01 / 我的职责</h3>${field(p.role,'待补充：负责的具体环节与工作边界。')}</div>
-       <div class="detail-block"><h3>02 / 项目判断</h3>${field(p.insight,'待补充：为什么选择它？项目最重要的判断或取舍是什么？')}</div>
-       <div class="detail-block"><h3>03 / 具体工作</h3>${field(p.work,'待补充：你真正推动或解决的问题，不强行拆成几项固定流程。')}</div>
-       <div class="detail-block"><h3>04 / 作品成绩</h3>${field(p.result,'待补充：销售表现、重印、奖项、媒体评价、榜单等可核实结果。')}</div>
+       <p class="eyebrow">PROJECT / ${esc(languageLabels[p.language]||p.category)} · ${esc(p.year)}</p><h2 class="detail-title" id="detail-title">${esc(p.title)}</h2><div class="detail-sub">${esc(p.subtitle)}</div><p class="detail-summary">${esc(p.summary)}</p>
+       ${fieldBlock('01','我的职责',p.role)}
+       ${fieldBlock('02','项目判断',p.insight)}
+       ${fieldBlock('03','具体工作',p.work)}
+       ${fieldBlock('04','作品成绩',p.result)}
        ${safeUrl(p.douban)?`<a class="detail-link" href="${esc(p.douban)}" target="_blank" rel="noopener noreferrer">前往豆瓣图书页 ↗</a>`:safeUrl(p.doubanSearch)?`<a class="detail-link" href="${esc(p.doubanSearch)}" target="_blank" rel="noopener noreferrer">在豆瓣搜索该书 ↗</a>`:''}
-       <div class="detail-notice">个人工作与业绩尚待核实填写；页面不将示例文字当作工作成果。</div>
+       <div class="detail-notice">${p.role?'作品成绩为团队或图书成果，不应等同个人独立贡献。信息据本人履历及公开出版资料整理。':'这本书的个人分工尚未整理完毕，暂不将内容介绍当作个人工作业绩。'}</div>
       </div></div>`;openDialog();
   }
   function renderArticles(){
@@ -93,7 +96,10 @@
   const email=data.site.email||'',label=data.site.socialLabel||'',url=data.site.socialUrl||'';
   const emailOK=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const urlOK=/^https?:\/\//.test(url);
-  $('contact-area').innerHTML=(emailOK?`<a class="contact-email" href="mailto:${esc(email)}">${esc(email)} ↗</a>`:'<p class="contact-pending">暂未开放公开联系方式</p>')+(label&&urlOK?`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a></p>`:'');
+  $('contact-area').innerHTML=(emailOK?`<a class="contact-email" href="mailto:${esc(email)}">${esc(email)} ↗</a>`:'<p class="contact-pending">如果你是从我的简历来到这里，请通过简历所留渠道联系我。</p>')+(label&&urlOK?`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a></p>`:'');
+  $('capability-list').innerHTML=data.capabilities.map((c,i)=>`<button type="button" class="capability-item" data-proof-target="${esc(c.target)}" aria-label="查看${esc(c.name)}对应的出版项目"><span class="capability-num">0${i+1}</span><span class="capability-body"><strong>${esc(c.name)}</strong><span>${esc(c.evidence)}</span></span><span class="capability-arrow">↗</span></button>`).join('');
+  $('capability-list').addEventListener('click',e=>{const btn=e.target.closest('[data-proof-target]');if(!btn)return;const p=data.projects.find(x=>x.id===btn.dataset.proofTarget);if(p)openProject(p);});
+  document.querySelectorAll('[data-featured-project]').forEach(btn=>btn.addEventListener('click',()=>{const p=data.projects.find(x=>x.id===btn.dataset.featuredProject);if(p)openProject(p);}));
   renderFilters();renderProjects();renderArticles();
   const start=location.hash.slice(1);if(ids.includes(start))goto(start,{updateHash:false});
 })();
