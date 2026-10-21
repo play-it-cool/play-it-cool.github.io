@@ -6,14 +6,14 @@
  */
 window.SITE_CONTENT = {
   site: {
-    displayName: '你的名字',
-    title: '个人作品与研究',
-    identity: 'EDITOR · RESEARCHER · WRITER',
-    intro: '六年外版人文社科图书编辑经历。这里保存已经成为实物的作品，也收集尚在生长的想法。',
+    displayName: 'play-it-cool',
+    title: 'play-it-cool',
+    identity: 'WORKS · NOTES · IN PROGRESS',
+    intro: '这里保存参与完成的出版作品，也给尚在生长的观察、文字与创作留出位置。不设固定主题，也不赶着把每个念头写成结论。',
     email: '',
     socialLabel: '',
     socialUrl: '',
-    projectsFootnote: '书封为过往提供的真实出版物图片。个人职责及出版成绩尚待逐项核实、补写；书籍介绍不代表个人业绩。'
+    projectsFootnote: '这里收录过往参与的出版项目。个人职责与作品成绩正在逐项核实和补充；书籍介绍本身不等于个人业绩。'
   },
   categories: ['全部', '社会与文化', '传媒与商业', '历史与纪实', '漫画与生活'],
   projects: [
@@ -30,11 +30,7 @@ window.SITE_CONTENT = {
     {id:'distinction',title:'品味与阶层',subtitle:'读懂布尔迪厄的文化社会学',category:'漫画与生活',year:'2026',cover:'assets/covers/s35546014.jpg',douban:'https://book.douban.com/subject/37491978/',summary:'以漫画形式进入品味、区分与社会阶层的议题。',role:'',insight:'',work:'',result:''},
     {id:'heartbeat',title:'跳动的心',subtitle:'',category:'漫画与生活',year:'待核实',cover:'assets/covers/s35601976.jpg',douban:'',doubanSearch:'https://search.douban.com/book/subject_search?search_text=%E8%B7%B3%E5%8A%A8%E7%9A%84%E5%BF%83',summary:'以图像叙事记录亲密关系与孕育新生命的经历。',role:'',insight:'',work:'',result:''}
   ],
-  articles: [
-    {id:'note-1',tag:'阅读与出版',date:'内容待补充',title:'一本好书，为什么未必是一个好选题？',excerpt:'文学价值、知识价值和出版价值，未必是重叠的标准。',paragraphs:['【示例文章】此处仅作版式测试，并非正式发表的文章。','一本书值得阅读，与一本书值得出版，是两个不同的问题。对受众、时机、竞品和呈现方式的判断，会改变编辑决策。'],demo:true},
-    {id:'note-2',tag:'叙事研究',date:'内容待补充',title:'故事在什么时候让人想看下一章？',excerpt:'从章节结尾的悬念，到人物关系的渐进变化。',paragraphs:['【示例文章】此处仅作版式测试，并非正式发表的文章。','叙事不只是发生了什么，也包括作者在何时交代、保留或改变某条信息。'],demo:true},
-    {id:'note-3',tag:'个人札记',date:'内容待补充',title:'把想法留在现实里',excerpt:'如果问题有答案，那么这些答案能否留下一点可见的痕迹？',paragraphs:['【示例文章】此处仅作版式测试，并非正式发表的文章。','这份个人档案是一种实验：尝试把分散的阅读、工作与思考，整理成能够被检索、被分享、被延续的成果。'],demo:true}
-  ],
+  articles: [],
   about: {
     headline:'保持好奇，\n也留下证据。',
     lead:'喜欢追问问题背后的结构，也在练习让思考成为能够被看见的作品。',
