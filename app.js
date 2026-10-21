@@ -12,7 +12,7 @@
   $('site-intro').textContent=data.site.intro;
   $('projects-notice').textContent=data.site.projectsFootnote;
   $('footer-year').textContent=new Date().getFullYear();
-  $('footer-name').textContent=data.site.displayName==='你的名字'?data.site.title:data.site.displayName;
+  $('footer-name').textContent=data.site.displayName;
   $('about-headline').textContent=data.about.headline;
   $('about-lead').textContent=data.about.lead;
   $('about-description').textContent=data.about.description;
@@ -79,6 +79,10 @@
       </div></div>`;openDialog();
   }
   function renderArticles(){
+    if (!data.articles.length) {
+      $('article-list').innerHTML='<div class="writing-empty"><span>FILE 000 / TO BE WRITTEN</span><h3>这里暂时没有公开的文字。</h3><p>一些碎片、随笔和完整的创作，会慢慢在这里归档。</p></div>';
+      return;
+    }
     $('article-list').innerHTML=data.articles.map(a=>`<button type="button" class="article-item" data-article="${esc(a.id)}"><div class="article-meta"><span>${esc(a.tag)}</span><span>${esc(a.date)}</span></div><div><h3 class="article-heading">${esc(a.title)}</h3><p class="article-excerpt">${esc(a.excerpt)}</p></div><span class="article-arr">↗</span></button>`).join('');
     $('article-list').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
       const a=data.articles.find(x=>x.id===b.dataset.article);if(!a)return;
@@ -89,7 +93,7 @@
   const email=data.site.email||'',label=data.site.socialLabel||'',url=data.site.socialUrl||'';
   const emailOK=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const urlOK=/^https?:\/\//.test(url);
-  $('contact-area').innerHTML=(emailOK?`<a class="contact-email" href="mailto:${esc(email)}">${esc(email)} ↗</a>`:'<p class="contact-pending">联系方式暂未填写 · 即将开放</p>')+(label&&urlOK?`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a></p>`:'');
+  $('contact-area').innerHTML=(emailOK?`<a class="contact-email" href="mailto:${esc(email)}">${esc(email)} ↗</a>`:'<p class="contact-pending">暂未开放公开联系方式</p>')+(label&&urlOK?`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a></p>`:'');
   renderFilters();renderProjects();renderArticles();
   const start=location.hash.slice(1);if(ids.includes(start))goto(start,{updateHash:false});
 })();
