@@ -55,8 +55,8 @@
     $('projects-grid').innerHTML=chosen.map((p,i)=>`<article class="project-card">
       <button class="card-cover" type="button" data-project="${esc(p.id)}" aria-label="展开《${esc(p.title)}》项目档案"><img alt="《${esc(p.title)}》图书封面" loading="eager" src="${esc(p.cover)}"></button>
       <div class="card-index"><span>${esc(languageLabels[p.language]||p.category)}</span><span>${esc(p.year)}</span></div>
-      <h3>${esc(p.title)}</h3><p class="project-subtitle">${esc(p.subtitle||' ')}</p><p class="project-summary">${esc(p.summary)}</p>
-      ${p.result?`<div class="achievement"><strong>成绩 /</strong><em>${esc(p.result)}</em></div>`:`<div class="achievement achievement-pending"><strong>档案 /</strong><em>个人分工待补录</em></div>`}
+      <h3>${esc(p.title)}</h3>${p.roleShort?`<p class="project-role">${esc(p.roleShort)}</p>`:''}<p class="project-subtitle">${esc(p.subtitle||' ')}</p><p class="project-summary">${esc(p.summary)}</p>
+      ${p.result?`<div class="achievement"><strong>成绩 /</strong><em>${esc(p.resultShort||p.result)}</em></div>`:`<div class="achievement achievement-pending"><strong>档案 /</strong><em>个人分工待补录</em></div>`}
       <div class="card-actions"><button type="button" data-project="${esc(p.id)}">查看项目档案 →</button>${link(p)}</div>
     </article>`).join('');
     $('project-count').textContent=`${chosen.length} / ${data.projects.length} PUBLICATIONS · END OF FILE`;
