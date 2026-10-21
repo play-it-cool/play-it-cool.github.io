@@ -89,7 +89,7 @@
     $('article-list').innerHTML=data.articles.map(a=>`<button type="button" class="article-item" data-article="${esc(a.id)}"><div class="article-meta"><span>${esc(a.tag)}</span><span>${esc(a.date)}</span></div><div><h3 class="article-heading">${esc(a.title)}</h3><p class="article-excerpt">${esc(a.excerpt)}</p></div><span class="article-arr">↗</span></button>`).join('');
     $('article-list').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
       const a=data.articles.find(x=>x.id===b.dataset.article);if(!a)return;
-      $('detail-content').innerHTML=`<div class="article-dialog"><p class="eyebrow">THE NOTEBOOK / ${esc(a.tag)}</p><h2 class="detail-title" id="detail-title">${esc(a.title)}</h2><p class="detail-sub">${esc(a.date)}</p>${a.paragraphs.map(line=>`<p>${esc(line)}</p>`).join('')}${a.demo?'<p class="detail-notice">此文章为演示占位稿，尚非真实公开作品。</p>':''}</div>`;openDialog();
+      $('detail-content').innerHTML=`<div class="article-dialog"><p class="eyebrow">THE NOTEBOOK / ${esc(a.tag)}</p><h2 class="detail-title" id="detail-title">${esc(a.title)}</h2><p class="detail-sub">${esc(a.date)}</p>${a.subtitle?`<p><em>${esc(a.subtitle)}</em></p>`:''}${a.paragraphs.map(line=>`<p>${esc(line).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}</p>`).join('')}${a.demo?'<p class="detail-notice">此文章为演示占位稿，尚非真实公开作品。</p>':''}</div>`;openDialog();
     }));
   }
   $('about-timeline').innerHTML=data.about.timeline.map(x=>`<div class="timeline-item"><span class="timeline-year">${esc(x.year)}</span><div><strong>${esc(x.name)}</strong><p>${esc(x.detail)}</p></div></div>`).join('');
