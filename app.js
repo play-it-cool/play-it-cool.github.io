@@ -97,7 +97,12 @@
   const emailOK=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const urlOK=/^https?:\/\//.test(url);
   $('contact-area').innerHTML=(emailOK?`<a class="contact-email" href="mailto:${esc(email)}">${esc(email)} ↗</a>`:'<p class="contact-pending">如果你是从我的简历来到这里，请通过简历所留渠道联系我。</p>')+(label&&urlOK?`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a></p>`:'');
-  $('capability-list').innerHTML=data.capabilities.map((c,i)=>`<button type="button" class="capability-item" data-proof-target="${esc(c.target)}" aria-label="查看${esc(c.name)}对应的出版项目"><span class="capability-num">0${i+1}</span><span class="capability-body"><strong>${esc(c.name)}</strong><span>${esc(c.evidence)}</span></span><span class="capability-arrow">↗</span></button>`).join('');
+  $('capability-list').innerHTML=data.capabilities.map((c,i)=>{
+    const body=`<span class="capability-num">${String(i+1).padStart(2,'0')}</span><span class="capability-body"><strong>${esc(c.name)}</strong><span>${esc(c.evidence)}</span></span><span class="capability-arrow">${c.target?'↗':'·'}</span>`;
+    return c.target
+      ?`<button type="button" class="capability-item" data-proof-target="${esc(c.target)}" aria-label="查看${esc(c.name)}对应的出版项目">${body}</button>`
+      :`<div class="capability-item capability-static">${body}</div>`;
+  }).join('');
   $('capability-list').addEventListener('click',e=>{const btn=e.target.closest('[data-proof-target]');if(!btn)return;const p=data.projects.find(x=>x.id===btn.dataset.proofTarget);if(p)openProject(p);});
   document.querySelectorAll('[data-featured-project]').forEach(btn=>btn.addEventListener('click',()=>{const p=data.projects.find(x=>x.id===btn.dataset.featuredProject);if(p)openProject(p);}));
   renderFilters();renderProjects();renderArticles();
