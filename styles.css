@@ -14,3 +14,10 @@
 
 /* 文件叠层由纸页盒阴影实现，保持主页纸张原本的暖白色，不覆盖文字与书封 */
 .file-paper::before,.file-paper::after{display:none!important}
+
+/* The notebook starts as an intentionally empty public archive. */
+.writing-empty{padding:54px 16px 65px;min-height:275px;border-bottom:1px solid var(--hair)}
+.writing-empty span{display:block;color:#7e9a8c;letter-spacing:.14em;font:700 10px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.writing-empty h3{margin:25px 0 12px;color:var(--ink);font-size:clamp(24px,3.6vw,34px);letter-spacing:-.045em;line-height:1.4}
+.writing-empty p{margin:0;color:#718b7d;font-size:13px;line-height:1.9}
+@media(max-width:520px){.writing-empty{padding:36px 5px 45px;min-height:240px}}
