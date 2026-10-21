@@ -1,0 +1,89 @@
+name: Publish personal archive
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Import initial site archive if present
+        shell: bash
+        run: |
+          if [ -f personal-portfolio-v2.zip ]; then
+            python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          archive = Path("personal-portfolio-v2.zip")
+          allowed = {".html", ".css", ".js", ".jpg", ".jpeg", ".png", ".webp", ".svg", ".md"}
+          with ZipFile(archive) as z:
+              for member in z.infolist():
+                  if member.is_dir():
+                      continue
+                  path = Path(member.filename)
+                  if len(path.parts) < 2 or path.parts[0] != "personal-portfolio-v2":
+                      continue
+                  relative = Path(*path.parts[1:])
+                  if ".." in relative.parts or relative.suffix.lower() not in allowed:
+                      continue
+                  destination = Path(".") / relative
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  destination.write_bytes(z.read(member))
+          assert Path("index.html").is_file(), "Missing index.html in archive"
+          Path(".nojekyll").touch()
+          archive.unlink()
+          PY
+          fi
+
+      - name: Keep unpacked website files in the repository
+        shell: bash
+        run: |
+          git add -A
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Import personal archive website"
+            git push origin HEAD:main
+          fi
+
+      - name: Check if website files exist
+        id: ready
+        shell: bash
+        run: |
+          if [ -f index.html ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure Pages
+        if: steps.ready.outputs.enabled == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        if: steps.ready.outputs.enabled == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy website
+        id: deployment
+        if: steps.ready.outputs.enabled == 'true'
+        uses: actions/deploy-pages@v4
