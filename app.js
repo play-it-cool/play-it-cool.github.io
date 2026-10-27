@@ -5,7 +5,7 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const safeUrl=v=>typeof v==='string'&&/^https:\/\/(book|search)\.douban\.com\//.test(v)?v:'';
   const ids=['home','works','writing','about','contact'];
-  const titles=['INTRODUCTION / 个人档案','PUBLICATIONS / 出版作品','WRITING / 文字','PROFILE / 关于','CONTACT / 联系'];
+  const titles=['INTRODUCTION / 个人档案','PUBLICATIONS / 出版作品','WRITING / 文字','RESUME / 履历','CONTACT / 联系'];
   let active='home',filter='全部作品',lastFocus=null;
   if(!data)return;
   document.title=`${data.site.title}｜Personal Archive`;
@@ -18,7 +18,8 @@
   $('about-description').textContent=data.about.description;
   const languageLabels={fr:'法语原作',en:'英语原作',pending:'原作待核实'};
   const categoryToLanguage={'全部作品':null,'法语原作':'fr','英语原作':'en','待核实':'pending'};
-  $('proof-ribbon').innerHTML=data.proof.map(x=>`<div class="proof-stat"><div class="proof-value">${esc(x.value)}<span>${esc(x.unit)}</span></div><strong>${esc(x.label)}</strong><p>${esc(x.detail)}</p></div>`).join('');
+  $('resume-proof').innerHTML=data.proof.map(x=>`<div class="proof-stat"><div class="proof-value">${esc(x.value)}<span>${esc(x.unit)}</span></div><strong>${esc(x.label)}</strong><p>${esc(x.detail)}</p></div>`).join('');
+  $('impact-grid').innerHTML=data.impact.map((x,i)=>`<button type="button" class="impact-tile impact-tile-${i+1}" data-featured-project="${esc(x.target)}" aria-label="查看${esc(x.label)}的项目档案"><span class="impact-index">0${i+1} — CASE STUDY <span>↗</span></span><span class="impact-number">${esc(x.value)}<small>${esc(x.unit)}</small></span><strong>${esc(x.label)}</strong><span class="impact-detail">${esc(x.detail)}</span></button>`).join('');
   function goto(id,{focus=false,updateHash=true}={}){
     if(!ids.includes(id))id='home';
     const old=$('page-'+active),fresh=$('page-'+id);
