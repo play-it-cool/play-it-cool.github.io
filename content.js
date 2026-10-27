@@ -9,7 +9,7 @@ window.SITE_CONTENT = {
     displayName: 'play-it-cool',
     title: 'play-it-cool',
     identity: 'WORKS · NOTES · IN PROGRESS',
-    intro: '这里保存参与完成的出版作品，也给尚在生长的观察、文字与创作留出位置。不设固定主题，也不赶着把每个念头写成结论。',
+    intro: '6年出版经验，跨语言选题与内容策划，从复杂信息中找到值得做的作品，再把判断推进为可以交付、传播与被检验的内容。现在也开始以自己的名义写作。',
     email: '',
     socialLabel: '',
     socialUrl: '',
@@ -29,6 +29,11 @@ window.SITE_CONTENT = {
     {id:'badcity',title:'沉默之恶',subtitle:'天使之城的危险与权力',category:'历史与纪实',year:'2025',cover:'assets/covers/s35032263.jpg',douban:'https://book.douban.com/subject/37155170/',summary:'围绕权力、腐败与调查报道的非虚构叙事。',language:"en",role:"",insight:"",work:"",result:""},
     {id:'influencer',title:'制造大V',subtitle:'网红经济发展简史',category:'传媒与商业',year:'2026',cover:'assets/covers/s35512546.jpg',douban:'https://book.douban.com/subject/37491974/',summary:'把内容创作者、平台与商业化放入产业发展的脉络中。',language:"en",role:"",insight:"",work:"",result:""},
     {id:'heartbeat',title:'跳动的心',subtitle:'',category:'漫画与生活',year:'待核实',cover:'assets/covers/s35601976.jpg',douban:'',doubanSearch:'https://search.douban.com/book/subject_search?search_text=%E8%B7%B3%E5%8A%A8%E7%9A%84%E5%BF%83',summary:'以图像叙事记录亲密关系与孕育新生命的经历。',language:"pending",role:"",insight:"",work:"",result:""}
+  ],
+  impact: [
+    {value:'14',unit:'印',label:'《制造消费者》累计印次',detail:'截至既有资料整理时；上市首月3印',target:'consumer'},
+    {value:'80',unit:'家',label:'《老女孩》全国独立书店联展',detail:'个人负责整合营销与IP延伸策划',target:'oldgirl'},
+    {value:'400',unit:'万元',label:'集团创新创业项目投资',detail:'团队成果；负责核心方案、市场分析与答辩沟通',target:'consumer'}
   ],
   proof: [
     {value:'8',unit:'种',label:'独立策划',detail:'从选题判断到产品方案'},
